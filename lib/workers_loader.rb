@@ -9,4 +9,6 @@ module WorkersLoader
 
   mattr_accessor :workers
   @@workers = []
+
+  autoload :Path, 'workers_loader/path'
 end
