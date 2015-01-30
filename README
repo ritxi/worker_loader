@@ -1,0 +1,26 @@
+This library is intended to let workers modularization.
+
+
+It lets you load workers queue names from a given directory.
+
+Let's say you have some engines with workers in folder /my_engine/app/workers
+
+You can place an initializer like follow in your engine so then the container app can collect all queues from engines:
+
+## Engine
+
+module MyApp
+  class Engine < ::Rails::Engine
+    initializer 'my_app.wokers_path' do |app|
+      WorkersLoader.add_path(MyApp::Engine.root.join('app', workers))
+    end
+  end
+end
+
+## Container App initializer
+
+You can get the complete list of queues by doing the following:
+
+WorkersLoader.load_workers!
+WorkersLoader.workers
+
