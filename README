@@ -1,6 +1,5 @@
 This library is intended to let workers modularization.
 
-
 It lets you load workers queue names from a given directory.
 
 Let's say you have some engines with workers in folder /my_engine/app/workers
@@ -12,7 +11,9 @@ You can place an initializer like follow in your engine so then the container ap
 module MyApp
   class Engine < ::Rails::Engine
     initializer 'my_app.wokers_path' do |app|
-      WorkersLoader.add_path(MyApp::Engine.root.join('app', workers))
+      WorkersLoader.resque_mailer!
+      workers_path = MyApp::Engine.root.join('app', 'workers', 'my_app')
+      WorkersLoader.add_path(workers_path)
     end
   end
 end
@@ -24,3 +25,4 @@ You can get the complete list of queues by doing the following:
 WorkersLoader.load_workers!
 WorkersLoader.workers
 
+With this list you can tell resque what queues to listen to.

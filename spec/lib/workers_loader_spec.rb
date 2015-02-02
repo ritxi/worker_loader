@@ -25,14 +25,32 @@ describe WorkersLoader do
   end
 
   describe '::load_workers!' do
-    before do
-      described_class.add_path(workers_path)
-      described_class.load_workers!
-    end
     let(:workers) { [:baz_queue, :dummy_foo].sort }
-    it { expect(described_class.workers.sort).to eq(workers) }
+
+    context 'load workers' do
+      before do
+        described_class.add_path(workers_path)
+        described_class.load_workers!
+      end
+
+      it { expect(described_class.workers.sort).to eq(workers) }
+    end
+
+    context 'load mailer' do
+      before do
+        described_class.resque_mailer!
+        described_class.load_workers!
+      end
+
+      it { expect(described_class.workers.sort).to include(:mailer) }
+    end
 
     context 'prevent duplicates' do
+      before do
+        described_class.add_path(workers_path)
+        described_class.load_workers!
+      end
+
       let(:message) { "Workers already present! #{workers.join(', ')}" }
       it { expect { described_class.load_workers! }.to raise_error(message) }
     end

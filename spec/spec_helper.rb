@@ -13,4 +13,9 @@ RSpec.configure do |config|
   config.mock_with :rspec
 
   config.order = 'random'
+
+  config.before(:each) do
+    WorkersLoader.workers = []
+    WorkersLoader.resque_mailer = false
+  end
 end

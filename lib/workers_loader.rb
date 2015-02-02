@@ -10,6 +10,9 @@ module WorkersLoader
   mattr_accessor :workers
   @@workers = []
 
+  mattr_accessor :resque_mailer
+  @@resque_mailer = false
+
   class << self
     def add_path(path, parent = true)
       fail "Directory not found: `#{path}`" unless Dir.exist?(path)
@@ -28,6 +31,21 @@ module WorkersLoader
 
         self.workers += workers_in_path
       end
+
+      resque_mailer_install
+    end
+
+    def resque_mailer_install
+      return if !resque_mailer? || self.workers.include?(:mailer)
+      self.workers << :mailer
+    end
+
+    def resque_mailer!
+      @@resque_mailer = true
+    end
+
+    def resque_mailer?
+      @@resque_mailer
     end
   end
 
