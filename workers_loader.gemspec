@@ -16,9 +16,11 @@ Gem::Specification.new do |s|
   s.files = Dir['{app,config,db,lib}/**/*'] + %w(MIT-LICENSE Rakefile README)
 
   s.add_dependency 'rails', '~> 3.2.21'
+  s.add_dependency 'resque'
 
   s.add_development_dependency 'rspec-rails'
   s.add_development_dependency 'factory_girl_rails'
+  s.add_development_dependency 'fuubar'
 
   s.test_files = Dir['spec/**/*']
 end
