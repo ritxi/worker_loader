@@ -23,16 +23,18 @@ describe WorkersLoader::Path do
     end
 
     describe '#files' do
-      let(:files) { %w(user reports/usage).sort }
+      let(:files) { %w(not_a_worker user reports/usage).sort }
       it { expect(subject.files.sort).to eq(files) }
     end
 
     describe '#class_for' do
+      it { expect(subject.class_for('not_a_worker')).to eq(NotAWorker) }
       it { expect(subject.class_for('user')).to eq(User) }
       it { expect(subject.class_for('reports/usage')).to eq(Reports::Usage) }
     end
 
     describe '#queue_for' do
+      it { expect(subject.queue_for('not_a_worker')).to be(false) }
       it { expect(subject.queue_for('user')).to eq(:user_queue) }
       it { expect(subject.queue_for('reports/usage')).to eq(:usage_queue) }
     end
