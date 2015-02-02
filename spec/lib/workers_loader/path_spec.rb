@@ -36,6 +36,10 @@ describe WorkersLoader::Path do
       it { expect(subject.queue_for('user')).to eq(:user_queue) }
       it { expect(subject.queue_for('reports/usage')).to eq(:usage_queue) }
     end
+
+    describe '::find' do
+      it { expect(subject.find.sort).to eq([:user_queue, :usage_queue].sort) }
+    end
   end
 
   context 'with parent' do
@@ -69,6 +73,10 @@ describe WorkersLoader::Path do
     describe '#queue_for' do
       it { expect(subject.queue_for('dummy/foo')).to eq(:dummy_foo) }
       it { expect(subject.queue_for('dummy/bar/baz')).to eq(:baz_queue) }
+    end
+
+    describe '::find' do
+      it { expect(subject.find.sort).to eq([:dummy_foo, :baz_queue].sort) }
     end
   end
 end

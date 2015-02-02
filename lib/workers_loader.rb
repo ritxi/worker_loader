@@ -11,27 +11,20 @@ module WorkersLoader
   @@workers = []
 
   class << self
-    def add_path(path)
+    def add_path(path, parent = true)
       fail "Directory not found: `#{path}`" unless Dir.exist?(path)
-      @@workers_paths << path
-    end
-
-    def find(path)
-      path = Path.new(path)
-      path.files.map { |file| path.queue_for(file) }
-        .reject(&:blank?)
+      @@workers_paths << Path.new(path, parent)
     end
 
     def load_workers!
       workers_paths.each do |path|
-        workers_in_path = find(path)
+        workers_in_path = path.find
         next if workers_in_path.empty?
 
         duplacates = workers_in_path
           .select { |worker| workers.include?(worker) }
-        if duplacates.any?
-          fail("Workers already present! #{duplacates.sort.join(', ')}")
-        end
+          .sort.join(', ')
+        fail("Workers already present! #{duplacates}") unless duplacates.blank?
 
         self.workers += workers_in_path
       end

@@ -15,19 +15,13 @@ describe WorkersLoader do
 
   describe '::add_path' do
     before { described_class.add_path(workers_path) }
-
-    it { expect(described_class.workers_paths).to eq([workers_path]) }
+    subject { described_class.workers_paths.first }
+    it { expect(subject).to be_a(WorkersLoader::Path) }
 
     context 'dubplicate worker' do
       let(:message) { 'Directory not found: `foo`' }
       it { expect { described_class.add_path('foo') }.to raise_error(message) }
     end
-  end
-
-  describe '::find' do
-    subject { described_class.find(workers_path) }
-
-    it { expect(subject.sort).to eq([:dummy_foo, :baz_queue].sort) }
   end
 
   describe '::load_workers!' do

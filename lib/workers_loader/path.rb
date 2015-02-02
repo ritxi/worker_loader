@@ -18,6 +18,11 @@ module WorkersLoader
         .map { |file| /#{base}\/(.*).rb/.match(file)[1] }
     end
 
+    def find
+      files.map { |file| queue_for(file) }
+        .reject(&:blank?)
+    end
+
     def class_for(relative_path)
       relative_path.split('/').map(&:camelize).join('::').constantize
     rescue NameError
