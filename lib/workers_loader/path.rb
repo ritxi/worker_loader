@@ -7,16 +7,15 @@ module WorkersLoader
 
     def initialize(base, parent = true)
       base = match[1] if match = /(.*)\/$/.match(base)
-      @base = base
-
-      @parent = base.split('/').last if parent
+      path = base.split('/')
+      @parent = path.pop if parent
+      @base = path.join('/')
     end
 
     def files
-      path = File.join(base, '{**/*.rb}')
+      path = File.join(base_with_parent, '{**/*.rb}')
       Dir[path]
         .map { |file| /#{base}\/(.*).rb/.match(file)[1] }
-        .map { |relative_path| relative_path_for(relative_path) }
     end
 
     def class_for(relative_path)
@@ -32,9 +31,8 @@ module WorkersLoader
       Resque.queue_from_class(class_for(relative_path))
     end
 
-    def relative_path_for(path)
-      parent.nil? ? path : File.join(parent, path)
+    def base_with_parent
+      parent.nil? ? base : File.join(base, parent)
     end
-    private :relative_path_for
   end
 end
