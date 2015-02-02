@@ -35,11 +35,11 @@ describe WorkersLoader do
       described_class.add_path(workers_path)
       described_class.load_workers!
     end
-
-    it { expect(described_class.workers).to eq([:baz_queue, :dummy_foo]) }
+    let(:workers) { [:baz_queue, :dummy_foo].sort }
+    it { expect(described_class.workers.sort).to eq(workers) }
 
     context 'prevent duplicates' do
-      let(:message) { 'Workers already present! baz_queue, dummy_foo' }
+      let(:message) { "Workers already present! #{workers.join(', ')}" }
       it { expect { described_class.load_workers! }.to raise_error(message) }
     end
   end

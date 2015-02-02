@@ -30,7 +30,7 @@ module WorkersLoader
         duplacates = workers_in_path
           .select { |worker| workers.include?(worker) }
         if duplacates.any?
-          fail("Workers already present! #{duplacates.join(', ')}")
+          fail("Workers already present! #{duplacates.sort.join(', ')}")
         end
 
         self.workers += workers_in_path
